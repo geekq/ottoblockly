@@ -11,11 +11,19 @@ autoUpdater.autoDownload = false
 autoUpdater.logger = null
 function createWindow () {
 	mainWindow = new BrowserWindow({width: 1240, height: 700, icon: 'www/media/app.ico', frame: false, movable: true})
+
+    const { app } = require('electron')
+    // console.log(app.getAppPath())
+
 	if (process.platform == 'win32' && process.argv.length >= 2) {
 		mainWindow.loadURL("file://" + path.join(__dirname, '../../www/index.html?url='+process.argv[1]))
 	} else {
-		mainWindow.loadURL("file://" + path.join(__dirname, '../../www/index.html'))
+        if (app.isPackaged)
+          mainWindow.loadURL("file://" + path.join(__dirname, '../../www/index.html'))
+        else
+          mainWindow.loadURL("file://" + path.join(__dirname, 'www/index.html'))
 	}
+    mainWindow.openDevTools();
 	mainWindow.setMenu(null)
 	mainWindow.on('closed', function () {
 		mainWindow = null
